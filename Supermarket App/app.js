@@ -74,6 +74,54 @@ app.post('/addProduct', (req, res) => {
     });
 });
 
+app.get('/editProduct/:id', (req,res) => {
+    const productId = req.params.id;
+    const sql = 'SELECT * FROM products WHERE productId = ?';
+    // Fetch data from MySQL based on the product ID
+    connection.query( sql , [productId], (error, results) => {
+        if (error) {
+            console.error('Database query error:', error.message);
+            return res.send('Error retrieving product by ID');
+        }
+    // Check if any product with the given ID was found
+        if (results.length > 0) {
+    // Render HTML page with the product data
+            res.render('editProduct', { product: results[0] });
+        } else {
+    // If no product with the given ID was found, render a 404 page or handle it accordingly
+            res.send('Product not found');
+        }
+    });
+});
+
+app.post('/editProduct/:id', (req, res) => {
+    const productId = req.params.id;
+    const { name, quantity, price } = req.body;
+    const sql = 'UPDATE products SET productName = ?, quantity = ?, price = ? WHERE productId = ?';
+    connection.query(sql, [name, quantity, price, productId], (error, results) => {
+        if (error) {
+            console.error('Database update error:', error.message);
+            res.send('Error updating product');
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+app.get('/deleteProduct/:id', (req, res) => {
+    const productId = req.params.id;
+    const sql = 'DELETE FROM products WHERE productId = ?';
+    connection.query(sql, [productId], (error, results) => {
+        if (error) {
+            console.error('Database delete error:', error.message);
+            res.send('Error deleting product');
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+
 app.listen(port, () => {
   console.log(`Server is running beautifully at http://localhost:${port}`);
 });

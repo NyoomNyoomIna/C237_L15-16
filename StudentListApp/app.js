@@ -74,6 +74,54 @@ app.post('/addStudent', (req, res) => {
     });
 });
 
+app.get('/editStudent/:id', (req,res) => {
+    const studentId = req.params.id;
+    const sql = 'SELECT * FROM products WHERE studentId = ?';
+    // Fetch data from MySQL based on the product ID
+    connection.query( sql , [studentId], (error, results) => {
+        if (error) {
+            console.error('Database query error:', error.message);
+            return res.send('Error retrieving product by ID');
+        }
+    // Check if any product with the given ID was found
+        if (results.length > 0) {
+    // Render HTML page with the product data
+            res.render('editStudent', { student: results[0] });
+        } else {
+    // If no product with the given ID was found, render a 404 page or handle it accordingly
+            res.send('Student not found');
+        }
+    });
+});
+
+app.post('/editStudent/:id', (req, res) => {
+    const studentId = req.params.id;
+    const { name, contact, dob, studentId  } = req.body;
+    const sql = 'UPDATE student SET studentName = ?, dob = ?, contact = ? WHERE studentId = ?';
+    connection.query(sql, [name, dob, contact, studentId], (error, results) => {
+        if (error) {
+            console.error('Database update error:', error.message);
+            res.send('Error updating product');
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+app.get('/deleteStudent/:id', (req, res) => {
+    const studentId = req.params.id;
+    const sql = 'DELETE FROM student WHERE studentId = ?';
+    connection.query(sql, [studentId], (error, results) => {
+        if (error) {
+            console.error('Database delete error:', error.message);
+            res.send('Error deleting product');
+        } else {
+            res.redirect('/');
+        }
+    });
+});
+
+
 app.listen(port, () => {
   console.log(`Server is running beautifully at http://localhost:${port}`);
 });
