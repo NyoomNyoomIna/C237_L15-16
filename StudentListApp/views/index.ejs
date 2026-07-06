@@ -45,7 +45,11 @@
             <!-- index.ejs table row -->
             <td><%= student[i].dob ? new Date(student[i].dob).toLocaleDateString() : '' %></td>
             <td><%= student[i].contact %></td>
-
+            <!-- Edit Link -->
+            <td><a href="/editStudent/<%= student[i].studentId %>">Edit</a></td>
+            <!-- Delete Link -->
+            <td><a href="/deleteStudent/<%= student[i].studentId %>"
+                onclick="return confirm('Are you sure you want to delete this student?')">Delete</a></td>
           </tr>
         <% } %>
       </tbody>

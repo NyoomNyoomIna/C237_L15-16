@@ -76,12 +76,12 @@ app.post('/addStudent', (req, res) => {
 
 app.get('/editStudent/:id', (req,res) => {
     const studentId = req.params.id;
-    const sql = 'SELECT * FROM products WHERE studentId = ?';
-    // Fetch data from MySQL based on the product ID
+    const sql = 'SELECT * FROM studentlistapp.student WHERE studentId = ?';
+    // Fetch data from MySQL based on the student ID
     connection.query( sql , [studentId], (error, results) => {
         if (error) {
             console.error('Database query error:', error.message);
-            return res.send('Error retrieving product by ID');
+            return res.send('Error retrieving student by ID');
         }
     // Check if any product with the given ID was found
         if (results.length > 0) {
@@ -96,12 +96,12 @@ app.get('/editStudent/:id', (req,res) => {
 
 app.post('/editStudent/:id', (req, res) => {
     const studentId = req.params.id;
-    const { name, contact, dob, studentId  } = req.body;
+    const { name, contact, dob } = req.body;
     const sql = 'UPDATE student SET studentName = ?, dob = ?, contact = ? WHERE studentId = ?';
     connection.query(sql, [name, dob, contact, studentId], (error, results) => {
         if (error) {
             console.error('Database update error:', error.message);
-            res.send('Error updating product');
+            res.send('Error updating student');
         } else {
             res.redirect('/');
         }
